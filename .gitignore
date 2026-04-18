@@ -1,0 +1,17 @@
+# executables
+*.exe
+*.out
+
+# object files
+*.o
+*.obj
+
+# build folders
+build/
+bin/
+
+# VS Code
+.vscode/
+
+# logs / data (optional depending on your project)
+*.log
