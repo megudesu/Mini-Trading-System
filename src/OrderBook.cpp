@@ -149,6 +149,8 @@ void LimitOrderBook::printWholeBook(){
 }
 
 int main(){
+    int n =  1000;
+
     using namespace std::chrono;
 
     FeedHandler feed("../Data/Datafile.txt");
@@ -159,10 +161,13 @@ int main(){
     while(feed.getNextOrder(o)){
         auto start = high_resolution_clock::now();
 
-        lob.processOrder(o);
+        for(int i = 0; i < n; i++){
+            LimitOrderBook temp = lob; // copy state
+            temp.processOrder(o);
+        }
 
         auto end = high_resolution_clock::now();
-        auto latency = duration_cast<nanoseconds>(end - start);
+        auto latency = duration_cast<nanoseconds>(end - start) / n;
         
         cout << "Latency: " << latency.count() << "ns" << endl;
 
