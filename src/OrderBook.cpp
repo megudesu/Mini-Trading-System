@@ -149,11 +149,11 @@ void LimitOrderBook::printWholeBook(){
 }
 
 int main(){
-    int n =  1000;
-
     using namespace std::chrono;
 
     FeedHandler feed("../Data/Datafile.txt");
+    ofstream lat("../Data/Latency.txt");
+
     LimitOrderBook lob;
 
     Order o;
@@ -161,22 +161,20 @@ int main(){
     while(feed.getNextOrder(o)){
         auto start = high_resolution_clock::now();
 
-        for(int i = 0; i < n; i++){
-            LimitOrderBook temp = lob; // copy state
-            temp.processOrder(o);
-        }
+        lob.processOrder(o);
 
         auto end = high_resolution_clock::now();
-        auto latency = duration_cast<nanoseconds>(end - start) / n;
-        
-        cout << "Latency: " << latency.count() << "ns" << endl;
+        auto latency = duration_cast<nanoseconds>(end - start);
 
+        lat << latency.count() << "ns" << endl;
         // UNCOMMENT TO CHECK BEST ASKS/BEST BIDS AFTER EVERY ORDER (affects latency)
         // lob.printStatement(); 
 
         // UNCOMMENT TO PRINT THE WHOLE ORDER BOOK AFTER EVERY ORDER (affects latency)
         // lob.printWholeBook();
     }
+    
+    lat.close();
 
     return 0;
 }
